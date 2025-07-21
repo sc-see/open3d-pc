@@ -17,8 +17,21 @@ class PointCloudPreprocessor:
         self.normal_max_nn = normal_max_nn
 
     def run(self, pcd: o3d.geometry.PointCloud) -> o3d.geometry.PointCloud:
+        """
+        Preprocess the point cloud by downsampling and estimating normals.
+
+        Uses the object attributes for voxel size and normal estimation parameters.
+
+        Args:
+            pcd (o3d.geometry.PointCloud): The input point cloud to preprocess.
+
+        Returns:
+            pcd (o3d.geometry.PointCloud): The preprocessed point cloud.
+        """
         pcd = self.downsample(pcd)
         pcd = self.estimate_normals(pcd)
+
+        logger.info(f"Processed point cloud with {len(pcd.points)} points.")
         return pcd
 
     def downsample(
@@ -26,6 +39,11 @@ class PointCloudPreprocessor:
         pcd: o3d.geometry.PointCloud,
         voxel_size: float = None,
     ) -> o3d.geometry.PointCloud:
+        """
+        Downsample the point cloud using voxel downsampling.
+
+        Allows overriding the voxel size if provided.
+        """
         voxel_size = self.voxel_size if voxel_size is None else voxel_size
         return pcd.voxel_down_sample(voxel_size)
 

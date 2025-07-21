@@ -32,4 +32,6 @@ class PointCloudClusterer:
             colors[valid_mask] = cluster_colors[valid_labels]
 
         pcd.colors = o3d.utility.Vector3dVector(colors)
+        logger.info(f"Clustered point cloud into {labels.max() + 1} clusters.")
+
         return labels, pcd

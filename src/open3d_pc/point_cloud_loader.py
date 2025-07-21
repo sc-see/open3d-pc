@@ -1,7 +1,6 @@
 import logging
 import os
 
-import numpy as np
 import open3d as o3d
 
 logger = logging.getLogger(__name__)
@@ -24,4 +23,6 @@ class PointCloudLoader:
             raise ValueError(f"Unsupported file format: {self.path}")
         
         self.pcd = o3d.io.read_point_cloud(self.path)
+        logger.info(f"Loaded point cloud with {len(self.pcd.points)} points.")
+
         return self.pcd

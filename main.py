@@ -19,15 +19,12 @@ def main(cfg: DictConfig):
     
     loader = PointCloudLoader(cfg.loader.path)
     pcd = loader.load()
-    logger.info(f"Loaded point cloud with {len(pcd.points)} points.")
     
     preprocessor = PointCloudPreprocessor(**cfg.preprocessor)
     processed_pcd = preprocessor.run(pcd)
-    logger.info(f"Processed point cloud with {len(processed_pcd.points)} points.")
 
     clusterer = PointCloudClusterer(**cfg.clusterer)
     labels, clustered_pcd = clusterer.cluster(processed_pcd)
-    logger.info(f"Clustered point cloud into {labels.max() + 1} clusters.")
 
     o3d.visualization.draw_geometries([clustered_pcd])
 
