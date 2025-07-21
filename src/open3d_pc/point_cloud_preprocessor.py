@@ -16,7 +16,7 @@ class PointCloudPreprocessor:
         self.normal_radius = normal_radius
         self.normal_max_nn = normal_max_nn
 
-    def run(self, pcd: o3d.geometry.PointCloud) -> o3d.geometry.PointCloud:
+    def preprocess(self, pcd: o3d.geometry.PointCloud) -> o3d.geometry.PointCloud:
         """
         Preprocess the point cloud by downsampling and estimating normals.
 
