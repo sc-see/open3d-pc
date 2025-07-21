@@ -23,39 +23,53 @@ class PointCloudClusterer:
         labels = pcd.cluster_dbscan(eps=self.eps, min_points=self.min_points)
         labels = np.array(labels)
         
-        valid_mask = labels >= 0
-        if valid_mask.any():
-            valid_labels = labels[valid_mask]
-            n_clusters = valid_labels.max() + 1
-        else:
-            logger.info(
-                f"No clusters found with {self.eps=} and {self.min_points}."
-            )
+        if not (labels >= 0).any():
+            logger.info(f"No clusters found with eps={self.eps}, min_points={self.min_points}.")
             return labels, pcd
+        
+        n_clusters = labels.max() + 1
+        logger.info(f"Clustered point cloud into {labels.max() + 1} clusters.")
 
         if visualize:
-            colors = np.zeros((len(labels), 3))
-            hue_values = np.linspace(0, 1, n_clusters + 1)[:-1]
-            cluster_colors = plt.cm.hsv(hue_values)[:, :3]
-
-            colors[valid_mask] = cluster_colors[valid_labels]
-            pcd.colors = o3d.utility.Vector3dVector(colors)
-
+            self._colorize_clusters(pcd, labels, n_clusters)
             o3d.visualization.draw_geometries([pcd])
 
         if save_clusters:
-            output_dir = Path(output_dir).resolve()
-            output_dir.mkdir(parents=True, exist_ok=True)
-
-            for cluster_id in range(n_clusters):
-                indices = np.where(labels == cluster_id)[0]
-                cluster_pcd = pcd.select_by_index(indices)
-                cluster_path = output_dir / f"cluster_{cluster_id}.ply"
-                o3d.io.write_point_cloud(str(cluster_path), cluster_pcd)
-            logger.info(
-                f"Saved {n_clusters} clusters to {output_dir}."
-            )
-
-        logger.info(f"Clustered point cloud into {labels.max() + 1} clusters.")
+            self._save_clusters(pcd, labels, n_clusters, output_dir)
 
         return labels, pcd
+
+    def _colorize_clusters(
+        self,
+        pcd: o3d.geometry.PointCloud,
+        labels: np.ndarray,
+        n_clusters: int,
+    ) -> None:
+        valid_mask = labels >= 0
+        valid_labels = labels[valid_mask]
+
+        colors = np.zeros((len(labels), 3))
+        hue_values = np.linspace(0, 1, n_clusters + 1)[:-1]
+        cluster_colors = plt.cm.hsv(hue_values)[:, :3]
+
+        colors[valid_mask] = cluster_colors[valid_labels]
+        pcd.colors = o3d.utility.Vector3dVector(colors)
+
+    def _save_clusters(
+        self,
+        pcd: o3d.geometry.PointCloud,
+        labels: np.ndarray,
+        n_clusters: int,
+        output_dir: str | Path,
+    ) -> None:
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        for cluster_id in range(n_clusters):
+            indices = np.where(labels == cluster_id)[0]
+            cluster_pcd = pcd.select_by_index(indices)
+            cluster_path = output_dir / f"cluster_{cluster_id}.ply"
+            o3d.io.write_point_cloud(str(cluster_path), cluster_pcd)
+        logger.info(
+            f"Saved {n_clusters} clusters to {output_dir}."
+        )
