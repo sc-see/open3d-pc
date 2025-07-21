@@ -1,0 +1,11 @@
+loader:
+  path:
+
+preprocessor:
+  voxel_size: 0.05
+  normal_radius: 0.1
+  normal_max_nn: 30
+
+clusterer:
+  eps: 0.108
+  min_points: 20
