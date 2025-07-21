@@ -9,3 +9,8 @@ preprocessor:
 clusterer:
   eps: 0.108
   min_points: 20
+
+cluster_output:
+  visualize: true
+  save_clusters: false
+  output_dir: "clusters"

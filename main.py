@@ -17,11 +17,10 @@ def main(cfg: DictConfig):
     pipeline = PointCloudPipeline(
         loader_cfg=cfg.loader,
         preprocessor_cfg=cfg.preprocessor,
-        clusterer_cfg=cfg.clusterer
+        clusterer_cfg=cfg.clusterer,
+        cluster_output_cfg=cfg.cluster_output,
     )
     pcd, _ = pipeline.run()
-
-    o3d.visualization.draw_geometries([pcd])
 
 
 if __name__ == "__main__":
