@@ -63,7 +63,7 @@ cd open3d-pc
 
 ### Set up the environment
 
-**Option A**: Using [Pixi](https://pixi.sh/latest/)
+**Option A**: Using [Pixi](https://pixi.sh/latest/) *(recommended)*
 
 ```shell
 pixi install
