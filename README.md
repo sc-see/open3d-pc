@@ -74,7 +74,7 @@ pixi run python main.py
 
 ```shell
 conda env create -f conda.yaml
-conda activate point-cloud-env
+conda activate open3d-pc
 python main.py
 ```
 

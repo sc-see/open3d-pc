@@ -1,4 +1,4 @@
-name: default
+name: open3d-pc
 channels:
 - conda-forge
 - nodefaults
