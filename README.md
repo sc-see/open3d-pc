@@ -75,6 +75,18 @@ pixi install
 pixi run python main.py
 ```
 
+This will run the full pipeline using the configuration provided in [`conf/config.yaml`](conf/config.yaml).
+
+> 💡 **Tip:** `PointCloudPipeline` can also be imported and used directly in your own scripts.
+>
+> ```python
+> from src.open3d_pc.pipeline import PointCloudPipeline
+> 
+> pipeline = PointCloudPipeline(...)
+> pcd, labels = pipeline.run()
+> ```
+
+
 Option B: Using Conda
 
 ```shell
