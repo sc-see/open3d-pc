@@ -9,6 +9,16 @@ logger = logging.getLogger(__name__)
 
 
 class PointCloudClusterer:
+    """
+    Clusters a point cloud using the DBSCAN algorithm.
+
+    Attributes:
+        eps (float): Maximum distance between two points to be considered neighbors.
+            Defaults to 0.108.
+        min_points (int): Minimum number of points required to form a cluster.
+            Defaults to 20.
+    """
+
     def __init__(self, eps: float = 0.108, min_points: int = 20):
         self.eps = eps
         self.min_points = min_points
@@ -20,6 +30,25 @@ class PointCloudClusterer:
         save_clusters: bool = False,
         output_dir: str | Path = "clusters",
     ) -> tuple[np.ndarray, o3d.geometry.PointCloud]:
+        """
+        Cluster the point cloud using DBSCAN. Optionally visualise the clusters or save
+        the clusters to files.
+
+        Args:
+            pcd (o3d.geometry.PointCloud): Input point cloud to cluster.
+            visualize (bool): Whether to colour and display the clusters. Defaults to
+                False.
+            save_clusters (bool): Whether to save each cluster to disk. Defaults to
+                False.
+            output_dir (str | Path): Directory to save the clusters if `save_clusters`
+                is True. Defaults to "clusters".
+        
+        Returns:
+            tuple[np.ndarray, o3d.geometry.PointCloud]: A tuple containing:
+                - labels (np.ndarray): Cluster labels for each point in the point cloud.
+                - pcd (o3d.geometry.PointCloud): The point cloud with optional cluster
+                  colours applied.
+        """
         labels = pcd.cluster_dbscan(eps=self.eps, min_points=self.min_points)
         labels = np.array(labels)
         
@@ -45,6 +74,17 @@ class PointCloudClusterer:
         labels: np.ndarray,
         n_clusters: int,
     ) -> None:
+        """
+        Apply unique colours to each cluster in the point cloud for visualisation.
+
+        Args:
+            pcd (o3d.geometry.PointCloud): The point cloud to modify.
+            labels (np.ndarray): Array of cluster labels for each point.
+            n_clusters (int): Number of clusters found in the point cloud.
+        
+        Returns:
+            None
+        """
         valid_mask = labels >= 0
         valid_labels = labels[valid_mask]
 
@@ -62,6 +102,15 @@ class PointCloudClusterer:
         n_clusters: int,
         output_dir: str | Path,
     ) -> None:
+        """
+        Save each cluster from the point cloud as separate PLY files.
+
+        Args:
+            pcd (o3d.geometry.PointCloud): The point cloud containing the clusters.
+            labels (np.ndarray): Array of cluster labels for each point.
+            n_clusters (int): Number of clusters found in the point cloud.
+            output_dir (str | Path): Directory to save the cluster files.
+        """
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 

@@ -7,11 +7,33 @@ logger = logging.getLogger(__name__)
 
 
 class PointCloudLoader:
+    """
+    Loads point cloud data from a given file path or a default sample dataset.
+
+    If no path is provided, the loader defaults to the Eagle Point Cloud sample dataset
+    from Open3D.
+
+    Attributes:
+        path (str | None): Path to the point cloud file. Defaults to None.
+        pcd (o3d.geometry.PointCloud | None): The loaded point cloud object after
+            calling `load()`.
+    """
+    
     def __init__(self, path: str | None = None):
         self.path = path
         self.pcd = None
 
     def load(self):
+        """
+        Load the point cloud from the specified path or the default dataset.
+
+        Returns:
+            self.pcd (o3d.geometry.PointCloud): The loaded point cloud object.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+            ValueError: If the file format is unsupported.
+        """
         if self.path is None:
             logger.info("No path provided, using default Eagle Point Cloud dataset.")
             data = o3d.data.EaglePointCloud()
