@@ -10,7 +10,7 @@ This project performs 3D point cloud processing using Open3D. The current functi
 - `src/open3d_pc/`: Source code modules implementing loader, preprocessor, and clusterer classes
 - `tests/`: Unit tests for core modules
 - `main.py`: Entry point to run the pipeline
-- `conda.yml`, `pyproject.toml`, `pixi.lock`: Environment and dependency management files
+- `conda.yaml`, `pyproject.toml`, `pixi.lock`: Environment and dependency management files
 
 ```shell
 .
@@ -24,7 +24,9 @@ This project performs 3D point cloud processing using Open3D. The current functi
 │       ├── point_cloud_pipeline.py
 │       └── point_cloud_preprocessor.py
 ├── tests
+│   ├── conftest.py
 │   ├── test_point_cloud_clusterer.py
+│   ├── test_point_cloud_loader.py
 │   └── test_point_cloud_preprocessor.py
 ├── conda.yaml
 ├── main.py
