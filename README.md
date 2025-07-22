@@ -19,9 +19,9 @@ This project performs 3D point cloud processing using Open3D. The current functi
 │   └── logging.yaml
 ├── src
 │   └── open3d_pc
-│       ├── __init__.py
 │       ├── point_cloud_clusterer.py
 │       ├── point_cloud_loader.py
+│       ├── point_cloud_pipeline.py
 │       └── point_cloud_preprocessor.py
 ├── tests
 │   ├── test_point_cloud_clusterer.py
@@ -32,12 +32,6 @@ This project performs 3D point cloud processing using Open3D. The current functi
 ├── pyproject.toml
 └── README.md
 ```
-
-<!-- ├── docs - not sure if need show all??
-│   ├── .png
-│   ├── .png
-│   ├── .png
-│   └── .png -->
 
 ### Code Architecture
 
@@ -56,7 +50,6 @@ The diagram below shows the UML class diagram of the point cloud processing pipe
 ![UML class diagram](docs/pointcloud_pipeline_class_diagram.drawio.png)
 **Fig 1.** UML class diagram of the point cloud processing pipeline.
 
-
 ## Getting Started
 
 ### Clone the repository
@@ -68,11 +61,19 @@ cd open3d-pc
 
 ### Set up the environment
 
-Option A: Using [Pixi](https://pixi.sh/latest/)
+**Option A**: Using [Pixi](https://pixi.sh/latest/)
 
 ```shell
 pixi install
 pixi run python main.py
+```
+
+**Option B**: Using Conda
+
+```shell
+conda env create -f conda.yaml
+conda activate point-cloud-env
+python main.py
 ```
 
 This will run the full pipeline using the configuration provided in [`conf/config.yaml`](conf/config.yaml).
@@ -86,13 +87,43 @@ This will run the full pipeline using the configuration provided in [`conf/confi
 > pcd, labels = pipeline.run()
 > ```
 
+## Configuration
 
-Option B: Using Conda
+This project uses [Hydra](https://hydra.cc/) for configuration management. Parameters are defined in [`conf/config.yaml`](conf/config.yaml), which can be modified. Alternatively, parameters can also be overriden at runtime via the command line.
 
-```shell
-conda env create -f conda.yml
-conda activate point-cloud-env
-python main.py
+### Configuration Parameters
+
+Below is an overview of the key configuration parameters:
+
+| Parameter | Default | Description |
+| --------- | ------- | ----------- |
+| `loader.path`                     | *empty* (default Eagle dataset)   | Path to the point cloud file. If empty, loads the default Eagle Point Cloud sample dataset. |
+| `preprocessor.voxel_size`         | `0.05`                            | Voxel size for downsampling point clouds. Smaller values preserve more detail but increase computation. |
+| `preprocessor.normal_radius`      | `0.1`                             | Search radius for neighbouring points to estimate surface normals. Affects normal accuracy and smoothness. |
+| `preprocessor.normal_max_nn`      | `30`                              | Maximum number of neighbouring points to use for normal estimation. |
+| `clusterer.eps`                   | `0.108`                           | Maximum distance between two points to be considered neighbours in DBSCAN clustering. |
+| `clusterer.min_points`            | `20`                              | Minimum number of points to form a cluster in DBSCAN. |
+| `cluster_output.visualize`        | `true`                            | Whether to colorise and display clustered point clouds for visualisation. |
+| `cluster_output.save_clusters`    | `false`                           | Whether to save each cluster as a separate PLY file. |
+| `cluster_output.output_dir`       | `"clusters"`                      | Directory where clusters are saved if `save_clusters` is `true`. |
+
+### Overriding from Command Line
+
+Hydra allows users to override configuration parameters directly from the command line without modifying the YAML files, which can be useful for testing different settings or running parameter sweeps.
+
+```
+# Override single parameters
+pixi run python main.py preprocessor.voxel_size=0.02 clusterer.min_points=10
+```
+
+Hydra also supports multi-run sweeps, which execute the script multiple times with different parameter combinations:
+
+```
+# Sweep over multiple voxel sizes
+pixi run python main.py --multirun preprocessor.voxel_size=0.02,0.03,0.04
+
+# Sweep over combinations of voxel size and min_points
+pixi run python main.py --multirun preprocessor.voxel_size=0.02,0.03 clusterer.min_points=10,20
 ```
 
 ## Examples
