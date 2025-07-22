@@ -1,7 +1,6 @@
 import logging
 
 import hydra
-import open3d as o3d
 from omegaconf import DictConfig
 
 from src.open3d_pc.logging_config import setup_logging
@@ -16,7 +15,7 @@ def main(cfg: DictConfig):
     Example entry point to run the point cloud processing pipeline with configuration.
     """
     setup_logging()
-    
+
     pipeline = PointCloudPipeline.from_config(cfg)
     pcd, labels = pipeline.run()
 

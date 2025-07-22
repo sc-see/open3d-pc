@@ -1,8 +1,8 @@
 import logging
 import logging.config
-import yaml
-
 from pathlib import Path
+
+import yaml
 
 logger = logging.getLogger(__name__)
 

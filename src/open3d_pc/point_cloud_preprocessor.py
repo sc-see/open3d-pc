@@ -60,14 +60,14 @@ class PointCloudPreprocessor:
 
         Returns:
             down_pcd (o3d.geometry.PointCloud): The downsampled point cloud.
-        
+
         Raises:
             ValueError: If voxel size is not positive.
         """
         voxel_size = self.voxel_size if voxel_size is None else voxel_size
         if voxel_size <= 0:
             raise ValueError(f"voxel_size must be positive, got {voxel_size}")
-        
+
         down_pcd = pcd.voxel_down_sample(voxel_size)
         logger.debug(
             f"Downsampled point cloud from {len(pcd.points)} "
@@ -91,10 +91,10 @@ class PointCloudPreprocessor:
                 instance's `normal_radius`.
             max_nn (int | None): Maximum number of nearest neighbors for normal
                 estimation. If None, uses the instance's `normal_max_nn`.
-        
+
         Returns:
             o3d.geometry.PointCloud: The point cloud with estimated normals.
-        
+
         Raises:
             ValueError: If radius or max_nn is not positive.
         """
@@ -104,7 +104,7 @@ class PointCloudPreprocessor:
             raise ValueError(f"radius must be positive, got {radius}")
         if max_nn <= 0:
             raise ValueError(f"max_nn must be positive, got {max_nn}")
-        
+
         pcd.estimate_normals(
             search_param=o3d.geometry.KDTreeSearchParamHybrid(
                 radius=radius,

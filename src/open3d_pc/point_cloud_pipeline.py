@@ -4,9 +4,9 @@ import numpy as np
 import open3d as o3d
 from omegaconf import DictConfig, OmegaConf
 
+from src.open3d_pc.point_cloud_clusterer import PointCloudClusterer
 from src.open3d_pc.point_cloud_loader import PointCloudLoader
 from src.open3d_pc.point_cloud_preprocessor import PointCloudPreprocessor
-from src.open3d_pc.point_cloud_clusterer import PointCloudClusterer
 
 logger = logging.getLogger(__name__)
 
@@ -19,15 +19,15 @@ class PointCloudPipeline:
         - PointCloudLoader for loading point cloud data.
         - PointCloudPreprocessor for downsampling and normal estimation.
         - PointCloudClusterer for clustering the point cloud data.
-    
-    Configuration for each component can be provided via dictionaries or DictConfig 
+
+    Configuration for each component can be provided via dictionaries or DictConfig
     objects and are passed to the respective classes during initialisation.
 
     Attributes:
         loader (PointCloudLoader): Loader instance configured with loader_cfg.
-        preprocessor (PointCloudPreprocessor): Preprocessor instance configured with 
+        preprocessor (PointCloudPreprocessor): Preprocessor instance configured with
             preprocessor_cfg.
-        clusterer (PointCloudClusterer): Clusterer instance configured with 
+        clusterer (PointCloudClusterer): Clusterer instance configured with
             clusterer_cfg.
         cluster_output_cfg (dict): Dictionary for cluster output, including options for
             visualisation and saving clusters.
@@ -65,13 +65,13 @@ class PointCloudPipeline:
             cfg (DictConfig | dict): Configuration DictConfig object or dictionary
                 containing keys for "loader", "preprocessor", "clusterer", and
                 "cluster_output".
-        
+
         Returns:
             PointCloudPipeline: Instance of PointCloudPipeline with configs applied.
         """
         if isinstance(cfg, DictConfig):
             cfg = OmegaConf.to_container(cfg, resolve=True)
-        
+
         return cls(
             loader_cfg=cfg.get("loader", {}),
             preprocessor_cfg=cfg.get("preprocessor", {}),

@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import numpy as np
 import open3d as o3d
 
@@ -8,7 +6,7 @@ from src.open3d_pc.point_cloud_clusterer import PointCloudClusterer
 
 def test_cluster_multiple_clusters(synthetic_clustered_pcd):
     clusterer = PointCloudClusterer()
-    
+
     labels, clustered_pcd = clusterer.cluster(synthetic_clustered_pcd)
     assert isinstance(labels, np.ndarray)
     assert len(labels) == len(synthetic_clustered_pcd.points)
@@ -24,7 +22,7 @@ def test_colorize_clusters(synthetic_clustered_pcd):
 
     assert isinstance(clustered_pcd, o3d.geometry.PointCloud)
     assert clustered_pcd.has_colors()
-    
+
     colors = np.asarray(clustered_pcd.colors)
     assert not np.all(colors == 0)
     assert colors.shape == (len(synthetic_clustered_pcd.points), 3)

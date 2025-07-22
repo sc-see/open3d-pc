@@ -2,6 +2,7 @@ import numpy as np
 import open3d as o3d
 import pytest
 
+
 @pytest.fixture
 def synthetic_pcd():
     points = np.random.rand(500, 3)

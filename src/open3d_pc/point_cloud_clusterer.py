@@ -42,7 +42,7 @@ class PointCloudClusterer:
                 False.
             output_dir (str | Path): Directory to save the clusters if `save_clusters`
                 is True. Defaults to "clusters".
-        
+
         Returns:
             tuple[np.ndarray, o3d.geometry.PointCloud]: A tuple containing:
                 - labels (np.ndarray): Cluster labels for each point in the point cloud.
@@ -51,11 +51,13 @@ class PointCloudClusterer:
         """
         labels = pcd.cluster_dbscan(eps=self.eps, min_points=self.min_points)
         labels = np.array(labels)
-        
+
         if not (labels >= 0).any():
-            logger.info(f"No clusters found with eps={self.eps}, min_points={self.min_points}.")
+            logger.info(
+                f"No clusters found with eps={self.eps}, min_points={self.min_points}."
+            )
             return labels, pcd
-        
+
         n_clusters = labels.max() + 1
         logger.info(f"Clustered point cloud into {labels.max() + 1} clusters.")
 
@@ -81,7 +83,7 @@ class PointCloudClusterer:
             pcd (o3d.geometry.PointCloud): The point cloud to modify.
             labels (np.ndarray): Array of cluster labels for each point.
             n_clusters (int): Number of clusters found in the point cloud.
-        
+
         Returns:
             None
         """
